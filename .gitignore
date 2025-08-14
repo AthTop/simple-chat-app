@@ -2,7 +2,7 @@
 node_modules
 dist
 .env
-/client/generated/prisma
+/server/generated/prisma
 
 # Logs
 logs
