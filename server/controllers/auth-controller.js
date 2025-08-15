@@ -1,3 +1,4 @@
+const { message } = require("../db/prisma");
 const { verifyUser, issueJWT } = require("../services/auth-service");
 const { validationResult } = require("express-validator");
 
@@ -38,4 +39,9 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { loginUser };
+const logoutUser = (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+};
+
+module.exports = { loginUser, logoutUser };
