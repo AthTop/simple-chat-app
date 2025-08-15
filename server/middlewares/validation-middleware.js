@@ -11,6 +11,7 @@ const validateRegistration = [
     .trim()
     .isStrongPassword({
       minLength: 3,
+      maxLength: 20,
       minLowercase: 1,
       minUppercase: 1,
       minNumbers: 1,
@@ -27,6 +28,20 @@ const validateRegistration = [
     .withMessage("Passwords must match"),
 ];
 
+const validateLogin = [
+  body("username")
+    .trim()
+    .notEmpty()
+    .withMessage("Username is required")
+    .isLength({ min: 3, max: 15 }),
+  body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 3, max: 20 }),
+];
+
 module.exports = {
   validateRegistration,
+  validateLogin,
 };
