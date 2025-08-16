@@ -17,14 +17,14 @@ const verifyUser = async (username, password) => {
 const issueJWT = (user) => {
   const expiresIn = "7d";
   const payload = {
-    sub: user.id,
+    sub: { id: user.id },
   };
 
   const signedToken = jsonwebtoken.sign(payload, process.env.SECRET, {
     expiresIn: expiresIn,
   });
 
-  return { token: signedToken, expiresIn: expiresIn };
+  return signedToken;
 };
 
 module.exports = { verifyUser, issueJWT };

@@ -2,17 +2,38 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const apiRoute = require("./routes/api-routes");
-const app = express();
+const { createServer } = require("https");
+const fs = require("fs");
+const { Server } = require("socket.io");
+const { chatHandler } = require("./sockets/chat-socket");
 
-// App setup
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// Read certs
+try {
+  const key = fs.readFileSync("./key.pem");
+  const cert = fs.readFileSync("./cert.pem");
 
-app.use("/", apiRoute);
+  // App setup
+  const app = express();
+  app.use(cors());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+  app.use("/", apiRoute);
 
-app.listen(PORT, () => {
-  console.log(`Express server listening on ${PORT}`);
-});
+  const PORT = process.env.PORT || 3000;
+
+  const httpsServer = createServer({ key, cert }, app);
+
+  const io = new Server(httpsServer, {
+    cors: { origin: process.env.CLIENT_URL, methods: ["GET", "POST"] },
+  });
+
+  chatHandler(io);
+
+  httpsServer.listen(PORT, () => {
+    console.log(`HTTPS Server listening on port ${PORT}`);
+  });
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}
