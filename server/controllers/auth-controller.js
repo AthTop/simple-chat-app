@@ -1,4 +1,3 @@
-const { message } = require("../db/prisma");
 const { verifyUser, issueJWT } = require("../services/auth-service");
 const { validationResult } = require("express-validator");
 
