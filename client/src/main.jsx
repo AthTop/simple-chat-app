@@ -5,17 +5,46 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Layout from "./pages/Layout.jsx";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { AuthRoute } from "./components/AuthRoute.jsx";
+import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
+import Chat from "./components/Chat.jsx";
+import IndexRedirect from "./components/IndexRedirect.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          {/* <Route path="chat" element={<Chat />} /> */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<IndexRedirect />} />
+            <Route
+              path="login"
+              element={
+                <AuthRoute>
+                  <Login />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="register"
+              element={
+                <AuthRoute>
+                  <Register />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="chat"
+              element={
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>
 );

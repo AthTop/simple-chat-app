@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { login } from "../services/api";
 import { useNavigate } from "react-router";
 import AuthForm from "./AuthForm.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState();
+  const { user, setUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const Login = () => {
         return;
       }
       setError();
-      navigate("/chat");
+      setUser(data.user);
     } catch (e) {
       if (e.response) {
         console.error(
@@ -36,6 +38,12 @@ const Login = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/chat");
+    }
+  });
 
   const onRegister = () => {
     navigate("/register");
