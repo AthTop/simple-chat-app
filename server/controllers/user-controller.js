@@ -33,6 +33,17 @@ const registerUser = async (req, res, next) => {
   }
 };
 
+const getUser = (req, res, next) => {
+  const user = req.user;
+  return res
+    .status(201)
+    .json({
+      success: true,
+      user: { username: user.username, id: user.id, status: user.status },
+    });
+};
+
 module.exports = {
   registerUser,
+  getUser,
 };
